@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <algorithm>
 #include <iostream>
-// ── Paleta de cores ───────────────────────────────────────────────────────────
+//  Paleta de cores 
 static const sf::Color FUNDO      {240, 244, 248}; // Cinza/Azul bem claro
 static const sf::Color PAINEL     {255, 255, 255}; // Branco puro
 static const sf::Color DESTAQUE   { 37,  99, 235}; // Azul vibrante
@@ -44,7 +44,7 @@ void Botao::desenhar(sf::RenderWindow& janela) {
 
 void Botao::setHover(bool h) { hover = h; }
 
-// ── CaixaTexto ────────────────────────────────────────────────────────────────
+//  CaixaTexto 
 CaixaTexto::CaixaTexto(const sf::Font& fonte, const std::string& dica,
                        sf::Vector2f pos, sf::Vector2f tam, unsigned tamanhoFonte) {
     caixa.setPosition(pos);
@@ -120,7 +120,7 @@ void CaixaTexto::desenhar(sf::RenderWindow& janela) {
     else janela.draw(texto);
 }
 
-// ── MenuDropdown ──────────────────────────────────────────────────────────────
+//  MenuDropdown 
 MenuDropdown::MenuDropdown(const sf::Font& f, std::vector<std::string> opts,
                            sf::Vector2f pos, sf::Vector2f tam, unsigned tf)
     : opcoes(std::move(opts)), fonte(&f), tamanhoFonte(tf) {
@@ -314,7 +314,7 @@ void App::desenharConfig() {
     rotulo("Memória Virtual (MB)",             inicioY + esp + alt/2 - 20, TEXTO_DIM);
     rotulo("Quantum (unidades de tempo)",      inicioY + 2*esp - 20);
     rotulo("Algoritmo de Escalonamento",       inicioY + 3*esp - 20);
-    rotulo("Política de Substituição de Pág.", inicioY + 4*esp - 20);
+    rotulo("Politica de Substituicao de Pag.", inicioY + 4*esp - 20);
 
     desenharTexto(janela, "Fisica",  {cx+5,        inicioY+esp-10}, 11, TEXTO_DIM);
     desenharTexto(janela, "Virtual", {cx+larg/2+10, inicioY+esp-10}, 11, TEXTO_DIM);

@@ -21,14 +21,14 @@ static const sf::Color CORES_PID[] = {
     {139,92,246},{244,63,94},  {20,184,166},{234,179,8}
 };
 
-// ── Formatar número com 2 casas decimais ──────────────────────────────────────
+//  Formatar número com 2 casas decimais
 static std::string fmt(double v) {
     std::ostringstream ss;
     ss << std::fixed << std::setprecision(2) << v;
     return ss.str();
 }
 
-// ── Eventos da tela de resultados ─────────────────────────────────────────────
+//Eventos da tela de resultados 
 void App::processarEventoResultados(const sf::Event& ev) {
     sf::Vector2f mp = janela.mapPixelToCoords(sf::Mouse::getPosition(janela));
 
@@ -52,7 +52,7 @@ void App::processarEventoResultados(const sf::Event& ev) {
         btnVoltar->setHover(btnVoltar->contem(mp));
 }
 
-// ── Diagrama de Gantt ─────────────────────────────────────────────────────────
+//Diagrama de Gantt 
 void App::desenharGantt(sf::RenderTarget& alvo, sf::FloatRect area) {
     if (resultado.gantt.empty()) return;
 
@@ -107,7 +107,7 @@ void App::desenharGantt(sf::RenderTarget& alvo, sf::FloatRect area) {
     alvo.draw(linha);
 }
 
-// ── Painel de métricas ────────────────────────────────────────────────────────
+//  Painel de métricas 
 void App::desenharMetricas(sf::RenderTarget& alvo, sf::FloatRect area) {
     sf::RectangleShape card({area.width, area.height});
     card.setPosition(area.left, area.top);
@@ -135,7 +135,7 @@ void App::desenharMetricas(sf::RenderTarget& alvo, sf::FloatRect area) {
     }
 }
 
-// ── Tabela de processos ───────────────────────────────────────────────────────
+//  Tabela de processos 
 void App::desenharTabelaProcessos(sf::RenderTarget& alvo, sf::FloatRect area) {
     sf::RectangleShape fundo({area.width, area.height});
     fundo.setPosition(area.left, area.top);
@@ -197,7 +197,7 @@ void App::desenharTabelaProcessos(sf::RenderTarget& alvo, sf::FloatRect area) {
     }
 }
 
-// ── Grade de memória (frames físicos) ────────────────────────────────────────
+// Grade de memória (frames físicos)
 void App::desenharGradeMemoria(sf::RenderTarget& alvo, sf::FloatRect area) {
     sf::RectangleShape fundo({area.width, area.height});
     fundo.setPosition(area.left, area.top);
@@ -236,7 +236,7 @@ void App::desenharGradeMemoria(sf::RenderTarget& alvo, sf::FloatRect area) {
     }
 }
 
-// ── Tela de resultados ────────────────────────────────────────────────────────
+//Tela de resultados
 void App::desenharResultados() {
     // 1. Limpa o fundo geral (agora azul clarinho/cinza)
     janela.clear(FUNDO); 
@@ -246,7 +246,7 @@ void App::desenharResultados() {
 
     float W = 1200.f;
 
-    // ─ Gantt (topo) ──────────────────────────────────────────────────────────
+    // ─ Gantt (topo)
     sf::FloatRect areaGantt(10, 55, W-20, 100);
     sf::RectangleShape bgGantt({areaGantt.width, areaGantt.height});
     bgGantt.setPosition(areaGantt.left, areaGantt.top);
@@ -255,13 +255,13 @@ void App::desenharResultados() {
     bgGantt.setOutlineColor(BORDA); // Borda clara
     janela.draw(bgGantt);
   
-    // ─ Métricas (esquerda, meio) ──────────────────────────────────────────────
+    // ─ Métricas (esquerda, meio) 
     desenharMetricas(janela, {10, 165, 220, 210});
 
-    // ─ Grade de memória (centro, meio) ───────────────────────────────────────
+    // ─ Grade de memória (centro, meio)
     desenharGradeMemoria(janela, {240, 165, 430, 210});
 
-    // ─ Legenda de processos (direita, meio) ──────────────────────────────────
+    // ─ Legenda de processos (direita, meio) 
     {
         sf::RectangleShape card({280.f, 210.f});
         card.setPosition(680, 165);
@@ -293,7 +293,7 @@ void App::desenharResultados() {
         desenharTexto(janela, "CPU ociosa", {710, ly}, 11, TEXTO_DIM);
     }
 
-    // ─ Tabela de processos (parte inferior) ──────────────────────────────────
+    // ─ Tabela de processos (parte inferior)
     {
         sf::RectangleShape bgTab({W-20, 200.f});
         bgTab.setPosition(10, 385);
@@ -306,8 +306,8 @@ void App::desenharResultados() {
         desenharTabelaProcessos(janela, {10, 403, W-20, 182});
     }
 
-    // ─ Rodapé ─────────────────────────────────────────────────────────────────
+    //  Rodapé 
     desenharTexto(janela, "ut = unidades de tempo", {10, 592}, 11, TEXTO_DIM);
 
-    janela.display();
+    
 }

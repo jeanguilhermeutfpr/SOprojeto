@@ -6,7 +6,7 @@
 
 
 
-// ── Auxiliar: adiciona/mescla entradas no Gantt ───────────────────────────────
+// ── Auxiliar: adiciona/mescla entradas no Gantt
 void Scheduler::addGantt(std::vector<GanttEntry>& gantt, int pid, int inicio, int fim) {
     if (inicio >= fim) return;
     if (!gantt.empty() && gantt.back().pid == pid && gantt.back().endTime == inicio)
@@ -28,9 +28,10 @@ static void calcularMetricas(std::vector<Process>& procs,
     mediaResposta = n ? totalResposta / n : 0;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Round-Robin
-// ─────────────────────────────────────────────────────────────────────────────
+// Round-Robin Round Robin (RR): Distribui o tempo de CPU igualmente entre 
+//os processos usando uma fatia de tempo fixa (Quantum). Quando o Quantum de um
+// processo termina, ele sofre uma preempção e volta para o fim da fila.
+
 SimulationResult Scheduler::runRR(std::vector<Process> procs) {
     std::vector<GanttEntry> gantt;
     int tempo = 0;
@@ -77,8 +78,18 @@ SimulationResult Scheduler::runRR(std::vector<Process> procs) {
 
         if (p.responseTime == -1) p.responseTime = tempo - p.arrivalTime;
         if (p.startTime    == -1) p.startTime    = tempo;
+// 1. Descobrir qual página ele acessa agora
+int progresso = p.burstTime - p.remainingTime;
+int paginaAlvo = progresso % p.numPages;
 
-        mem->accessPage(p, 0, tempo, {}, procs);
+// 2. Prever as próximas páginas que esse processo vai usar (Ex: previsão de 5 unidades de tempo)
+std::vector<int> previsaoFutura;
+for (int i = 1; i <= 5 && (progresso + i) < p.burstTime; ++i) {
+    previsaoFutura.push_back((progresso + i) % p.numPages);
+}
+
+// 3. Enviar a previsão para o Memory Manager (vai alimentar o algoritmo Ótimo!)
+mem->accessPage(p, paginaAlvo, tempo, previsaoFutura, procs);
 
         int fatia = std::min(quantum, p.remainingTime);
         int fimFatia = tempo + fatia;
@@ -109,9 +120,10 @@ SimulationResult Scheduler::runRR(std::vector<Process> procs) {
     return res;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 // SJF Preemptivo (Shortest Remaining Time First — SRTF)
-// ─────────────────────────────────────────────────────────────────────────────
+//Escolhe o processo que precisa de menos tempo de CPU para terminar a sua execução.
+
 SimulationResult Scheduler::runSJFP(std::vector<Process> procs) {
     std::vector<GanttEntry> gantt;
     int tempo = 0;
@@ -168,7 +180,18 @@ SimulationResult Scheduler::runSJFP(std::vector<Process> procs) {
         if (p.responseTime == -1) p.responseTime = tempo - p.arrivalTime;
         if (p.startTime    == -1) p.startTime    = tempo;
 
-       mem->accessPage(p, 0, tempo, {}, procs);
+      // 1. Descobrir qual página ele acessa agora
+int progresso = p.burstTime - p.remainingTime;
+int paginaAlvo = progresso % p.numPages;
+
+// 2. Prever as próximas páginas que esse processo vai usar (Ex: previsão de 5 unidades de tempo)
+std::vector<int> previsaoFutura;
+for (int i = 1; i <= 5 && (progresso + i) < p.burstTime; ++i) {
+    previsaoFutura.push_back((progresso + i) % p.numPages);
+}
+
+// 3. Enviar a previsão para o Memory Manager (vai alimentar o algoritmo Ótimo!)
+mem->accessPage(p, paginaAlvo, tempo, previsaoFutura, procs);
         // Próximo evento: chegada de um processo que pode causar preempção
         int proximoEvento = INT_MAX;
         for (auto& q : procs)
@@ -207,9 +230,9 @@ SimulationResult Scheduler::runSJFP(std::vector<Process> procs) {
     return res;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 // Prioridade Preemptiva (menor número = maior prioridade)
-// ─────────────────────────────────────────────────────────────────────────────
+
 SimulationResult Scheduler::runPriorityP(std::vector<Process> procs) {
     std::vector<GanttEntry> gantt;
     int tempo = 0;
@@ -261,8 +284,18 @@ SimulationResult Scheduler::runPriorityP(std::vector<Process> procs) {
         p.state = ProcessState::RUNNING;
         if (p.responseTime == -1) p.responseTime = tempo - p.arrivalTime;
         if (p.startTime    == -1) p.startTime    = tempo;
+// 1. Descobrir qual página ele acessa agora
+int progresso = p.burstTime - p.remainingTime;
+int paginaAlvo = progresso % p.numPages;
 
-     mem->accessPage(p, 0, tempo, {}, procs);
+// 2. Prever as próximas páginas que esse processo vai usar (Ex: previsão de 5 unidades de tempo)
+std::vector<int> previsaoFutura;
+for (int i = 1; i <= 5 && (progresso + i) < p.burstTime; ++i) {
+    previsaoFutura.push_back((progresso + i) % p.numPages);
+}
+
+// 3. Enviar a previsão para o Memory Manager (vai alimentar o algoritmo Ótimo!)
+mem->accessPage(p, paginaAlvo, tempo, previsaoFutura, procs);
 
         // Executa 1 unidade de tempo (totalmente preemptivo)
         addGantt(gantt, p.pid, tempo, tempo + 1);
@@ -292,7 +325,7 @@ SimulationResult Scheduler::runPriorityP(std::vector<Process> procs) {
     return res;
 }
 
-// ── Despacho ──────────────────────────────────────────────────────────────────
+
 SimulationResult Scheduler::run(std::vector<Process> processos) {
     // Resetar estado do gerenciador de memória
     mem->pageFaults = 0;
