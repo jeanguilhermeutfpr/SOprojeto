@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <iostream>
 //  Paleta de cores 
+
+//sfml
 static const sf::Color FUNDO      {240, 244, 248}; // Cinza/Azul bem claro
 static const sf::Color PAINEL     {255, 255, 255}; // Branco puro
 static const sf::Color DESTAQUE   { 37,  99, 235}; // Azul vibrante
@@ -310,8 +312,8 @@ void App::desenharConfig() {
     };
 
     rotulo("Arquivo CSV de Processos",         inicioY );
-    rotulo("Memória Física (MB)",              inicioY + esp - 20);
-    rotulo("Memória Virtual (MB)",             inicioY + esp + alt/2 - 20, TEXTO_DIM);
+    rotulo("Memoria Fisica (MB)",              inicioY + esp - 20);
+    rotulo("Memoria Virtual (MB)",             inicioY + esp + alt/2 - 20, TEXTO_DIM);
     rotulo("Quantum (unidades de tempo)",      inicioY + 2*esp - 20);
     rotulo("Algoritmo de Escalonamento",       inicioY + 3*esp - 20);
     rotulo("Politica de Substituicao de Pag.", inicioY + 4*esp - 20);
